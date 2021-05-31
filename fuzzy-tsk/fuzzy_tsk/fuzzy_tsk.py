@@ -12,50 +12,68 @@ class fuzzy(object):
 
     def run(self):
 
-        x_values = np.linspace(-2, 2, 100)
+        x_values = np.linspace(-2, 2, 120)
 
-        self.tsk(x_values, lambda x: self.gaussian(x, -2, 1), lambda x: self.gaussian(x, 2, 1))
+        self.init()
+        print(self.error(x_values))
+
+        plt.plot(x_values, self.w1(x_values))
+        plt.plot(x_values, self.w2(x_values))
+
+        plt.plot(x_values, self.y(x_values))
+
+        plt.show()
+
+        self.init()
+        print(self.error(x_values))
+
+        plt.plot(x_values, self.w1(x_values))
+        plt.plot(x_values, self.w2(x_values))
+
+        plt.plot(x_values, self.y(x_values))
+
+        plt.show()
 
 
+    def init(self):
+        self.x_1  = np.random.rand()*5
+        self.x_2  = np.random.rand()*5
+        self.sig1 = np.random.rand()*5
+        self.sig2 = np.random.rand()*5
+        self.p1   = np.random.rand()*5
+        self.p2   = np.random.rand()*5
+        self.q1   = np.random.rand()*5
+        self.q2   = np.random.rand()*5
 
-    def gaussian(self, x, mu, sigma):
-        return np.exp(-np.power(x - mu, 2) / (2 * np.power(sigma, 2)))
+
+    def gaussian(self, x, x_, sigma):
+        return np.exp(-np.power(x - x_, 2) / (2 * np.power(sigma, 2)))
 
     def x_power_2(self, x):
         return np.power(x, 2)
 
-    def tsk(self, x_values, gaussian1, gaussian2):
-        y_array = []
-        p1 = 1
-        p2 = 1
-        q1 = 0
-        q2 = 0
+    def w1(self, x):
+        return self.gaussian(x, self.x_1, self.sig1)
 
+    def w2(self, x):
+        return self.gaussian(x, self.x_2, self.sig2)
 
-        for i, x in enumerate(x_values):
-            y1 = p1 * x + q1 
-            y2 = p2 * x + q2 
+    def y1(self, x):
+        return self.p1 * x + self.q1
 
-            w1 = gaussian1(x)
-            w2 = gaussian2(x)
+    def y2(self, x):
+        return self.p2 * x + self.q2
 
-            print(i, x)
-            print(y1)
-            print(y2)
-            print(w1)
-            print(w2)
-            print((w1 * y1 + w2 * y2)/(w1 + w2))
-            print()
+    def y(self, x):
+        return (self.w1(x) * self.y1(x) + self.w2(x) * self.y2(x)) / (self.w1(x) + self.w2(x))
 
-            y = (w1 * y1 + w2 * y2)/(w1 + w2)
-            y_array.append(y)
+    def yd(self, x):
+        # TODO: finish y derivative
+        return (x)
 
-
-        #plt.plot(x_values, gaussian1(x_values))
-        #plt.plot(x_values, gaussian2(x_values))
-
-        plt.plot(x_values, y_array)
-        plt.plot(x_values, self.x_power_2(x_values))
-        plt.show()
-
+    def error(self, x_values):
+        error = 0
+        for x in x_values:
+            error = error + (1/2)*np.power((self.y(x_values) - self.yd(x_values)), 2)
+        return error / len(x_values)
 
