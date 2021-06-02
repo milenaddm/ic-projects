@@ -1,101 +1,112 @@
 import numpy as np
 import math
-import matplotlib as mp
 import matplotlib.pyplot as plt
 
 
 class fuzzy(object):
-    def __init__(self) -> None:
+    def __init__(self, n_points, maxepocas, learning_rate) -> None:
         super().__init__()
 
-        #tation_rate = mutation_rate
+        self.n_points = n_points
+        self.maxepocas = maxepocas
+        self.learning_rate = learning_rate
 
     def run(self):
+        self.init()
 
-        x_values = np.linspace(-2, 2, 120)
+        x_values = np.linspace(-2, 2, self.n_points)
 
-        self.init(3)
-        self.plot(x_values)
+        aprox = np.zeros(self.n_points)
+        error = 0.
 
+        for i in range(self.maxepocas):
+            aprox, error = self.update(x_values, self.learning_rate, i)
+        self.plot(x_values, aprox, error, self.maxepocas)
 
-        for i in range(100):
-            # a = 0.01
-            self.update(x_values, 0.1)
-        self.plot(x_values)
+    def init(self):
+        # Values between -2 and 2
+        self.x_1  = np.random.rand()*4 -2
+        self.x_2  = np.random.rand()*4 -2
+        self.sig1 = np.random.rand()*4 -2
+        self.sig2 = np.random.rand()*4 -2
+        self.p1   = np.random.rand()*4 -2
+        self.p2   = np.random.rand()*4 -2 
+        self.q1   = np.random.rand()*4 -2
+        self.q2   = np.random.rand()*4 -2
 
+    def plot(self, x_values, aprox, error, epoca):
 
-    def init(self, limit):
-        self.x_1  = np.random.rand()*limit
-        self.x_2  = np.random.rand()*limit
-        self.sig1 = np.random.rand()*limit
-        self.sig2 = np.random.rand()*limit
-        self.p1   = np.random.rand()*limit
-        self.p2   = np.random.rand()*limit
-        self.q1   = np.random.rand()*limit
-        self.q2   = np.random.rand()*limit
+        g1 = self.gaussian(x_values, self.x_1, self.sig1)
+        g2 = self.gaussian(x_values, self.x_2, self.sig2)
 
-    def plot(self, x_values):
-        print(self.error(x_values))
+        plt.plot(x_values, g1, label='Gaussian 1')
+        plt.plot(x_values, g2, label='Gaussian 2')
 
-        plt.plot(x_values, self.w1(x_values))
-        plt.plot(x_values, self.w2(x_values))
+        plt.plot(x_values, np.power(x_values, 2), label='Objective')
+        plt.plot(x_values, aprox, label='Aproximation')
 
-        plt.plot(x_values, self.x_power_2(x_values))
-
+        plt.title(f'Epoch: {epoca}\nAverage error: {error}')
+        plt.legend()
         plt.show()
 
     def gaussian(self, x, x_, sigma):
-        return np.exp(-np.power(x - x_, 2) / (2 * np.power(sigma, 2)))
+      return np.exp((-1/2) * np.power((x - x_) / sigma, 2))
 
-    def x_power_2(self, x):
-        return np.power(x, 2)
+    def update(self, x_values, alpha, epoca):
 
-    def w1(self, x):
-        return self.gaussian(x, self.x_1, self.sig1)
+        # Randomize indexes for x_values
+        indice = np.arange(120)
+        np.random.shuffle(indice)
+        
+        y = np.zeros(len(x_values))
+        error = np.zeros(len(x_values))
 
-    def w2(self, x):
-        return self.gaussian(x, self.x_2, self.sig2)
+        for i in indice:
+          x = x_values[i]
 
-    def y1(self, x):
-        return self.p1 * x + self.q1
+          w1 = self.gaussian(x, self.x_1, self.sig1)
 
-    def y2(self, x):
-        return self.p2 * x + self.q2
+          w2 = self.gaussian(x, self.x_2, self.sig2)
 
-    def y(self, x):
-        return (self.w1(x) * self.y1(x) + self.w2(x) * self.y2(x)) / (self.w1(x) + self.w2(x))
+          w1n = w1/(w1 + w2)
 
-    def error(self, x_values):
-        error = 0
-        for x in x_values:
-            error = error + (1/2)*np.power((self.y(x_values) - self.x_power_2(x_values)), 2)
-        return error / len(x_values)
+          w2n = w2/(w1 + w2)
 
-    def update(self, x, a):
+          y1 = self.p1 * x + self.q1
+          y2 = self.p2 * x + self.q2
 
-        # Calculate error's derivatives
-        e_p1 = (self.y(x) - self.x_power_2(x)) * (self.w1(x)/(self.w1(x) + self.w2(x))) * x
+          y[i] = w1n * y1 + w2n * y2
 
-        e_p2 = (self.y(x) - self.x_power_2(x)) * (self.w2(x)/(self.w1(x) + self.w2(x))) * x
+          yd = np.power(x, 2)
 
-        e_q1 = (self.y(x) - self.x_power_2(x)) * (self.w1(x)/(self.w1(x) + self.w2(x)))
+          error[i] = y[i] - yd
 
-        e_q2 = (self.y(x) - self.x_power_2(x)) * (self.w2(x)/(self.w1(x) + self.w2(x)))
+          # Calculate error's derivatives
+          e_p1 = error[i] * w1n * x
 
-        e_x_1 = (self.y(x) - self.x_power_2(x)) * self.w2(x) * ((self.y1(x) - self.y2(x))/np.power((self.w1(x) + self.w2(x)), 2)) * self.w1(x) * ((x - self.x_1)/np.power(self.sig1, 2))
+          e_p2 = error[i] * w2n * x
 
-        e_x_2 = (self.y(x) - self.x_power_2(x)) * self.w1(x) * ((self.y2(x) - self.y1(x))/np.power((self.w1(x) + self.w2(x)), 2)) * self.w2(x) * ((x - self.x_2)/np.power(self.sig2, 2))
+          e_q1 = error[i] * w1n
 
-        e_sig1 = (self.y(x) - self.x_power_2(x)) * self.w2(x) * ((self.y1(x) - self.y2(x))/np.power((self.w1(x) + self.w2(x)), 2)) * self.w1(x) * (np.power((x - self.x_1), 2)/np.power(self.sig1, 3))
+          e_q2 = error[i] * w1n
 
-        e_sig2 = (self.y(x) - self.x_power_2(x)) * self.w1(x) * ((self.y1(x) - self.y2(x))/np.power((self.w1(x) + self.w2(x)), 2)) * self.w2(x) * (np.power((x - self.x_2), 2)/np.power(self.sig2, 3))
+          e_x_1 = error[i] * w2 * ((y1 - y2) / np.power(w1 + w2, 2)) * w1 * ((x - self.x_1) / np.power(self.sig1, 2))
 
-        # Update parameters
-        self.p1 = self.p1 - (a * e_p1)
-        self.p2 = self.p2 - (a * e_p2)
-        self.q1 = self.q1 - (a * e_q1)
-        self.q2 = self.q2 - (a * e_q2)
-        self.x_1 = self.x_1 - (a * e_x_1)
-        self.x_2 = self.x_2 - (a * e_x_2)
-        self.sig1 = self.sig1 - (a * e_sig1)
-        self.sig2 = self.sig2 - (a * e_sig2)
+          e_x_2 = error[i] * w1 * ((y2 - y1) / np.power(w1 + w2, 2)) * w2 * ((x - self.x_2) / np.power(self.sig2, 2))
+
+          e_sig1 = error[i] * w2 * ((y1 - y2) / np.power(w1 + w2, 2)) * w1 * (np.power(x - self.x_1, 2) / np.power(self.sig1, 3))
+
+          e_sig2 = error[i] * w1 * ((y2 - y1) / np.power(w1 + w2, 2)) * w2 * (np.power(x - self.x_2, 2) / np.power(self.sig2, 3))
+
+          # Update parameters
+          self.p1   = self.p1   - (alpha * e_p1)
+          self.p2   = self.p2   - (alpha * e_p2)
+          self.q1   = self.q1   - (alpha * e_q1)
+          self.q2   = self.q2   - (alpha * e_q2)
+          self.x_1  = self.x_1  - (alpha * e_x_1)
+          self.x_2  = self.x_2  - (alpha * e_x_2)
+          self.sig1 = self.sig1 - (alpha * e_sig1)
+          self.sig2 = self.sig2 - (alpha * e_sig2)
+
+        error_average = np.average(error)
+        return y, error_average

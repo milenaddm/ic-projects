@@ -26,30 +26,20 @@ O comando `python3 fuzzy-tsk -h` mostra como usar o pacote, como visto na seguin
 ```bash
 Perceptron usage:
 
-python3 fuzzy-tsk 
+python3 fuzzy-tsk -n <number-of-points> -m <maxepocas> -l <learning-rate>
 ```
 
 ## Exemplo
 
-Para determinar o custo para `<pop-size>` = 20 e `<mutation-rate>` = 0.005, use o comando:
+Para aproximar a saída com `<number-of-points>` = 120, `<maxepocas> ` = 1000 e `<learning-rate>` = 0.01, use o comando:
 ```bash
-python3 minimization-genetic-algorithm -p 50 -m 0.005
+python3 fuzzy-tsk -n 120 -m 1000 -l 0.01
 ```
 
-O resultado a ser impresso na tela será:
-```
-Generation: 0
-Generation: 50
-Generation: 100
-Generation: 150
-Generation: 200
-Generation: 250
-Generation: 267
-Best individual and fitness: [-1.58214947 -3.13022245], -106.76453666013647
-```
+O gráfico impresso na tela será algo semelhante a:
+![Figura 1](./images/Figure_1.png)
 
-**OBS.:** O resultado pode variar pois, ao executar o programa, a populacao inicial é gerada aleatoriamente. 
-
+**OBS.:** O resultado pode variar pois, ao executar o programa, os valores iniciais do parâmetros são gerados aleatoriamente. 
 
 
 ## Versões do Python recomendadas
