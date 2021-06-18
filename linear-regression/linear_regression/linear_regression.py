@@ -20,19 +20,23 @@ class linear_regression(object):
         self.read_data()
         self.init()
 
-        plt.plot(self.x, self.y, 'o', label='y')
-        plt.title(f'Data')
+        plt.plot(self.x, self.y, 'o', label='y', color='orange')
+        plt.title(f'Lucro por População')
         plt.legend()
+        plt.ylabel("Lucro em $10.000s")
+        plt.xlabel("População em 10.000s")
         plt.show()
 
+        cost_arr = []
         error_0 = 0
         error_1 = 0
 
         for epoca in range(self.maxepocas):
-            error_0, error_1 = self.update(epoca)
+            cost, error_0, error_1 = self.update()
+            cost_arr.append(cost)
             # print(f't0: {self.t0} \t t1: {self.t1}')
             # self.plot(epoca, error_0, error_1)
-        self.plot(self.maxepocas, error_0, error_1)
+        self.plot(cost_arr, error_0, error_1)
 
     def init(self):
         self.t0 = np.random.rand()
@@ -45,6 +49,16 @@ class linear_regression(object):
         # print(data)
         self.x = data['x']
         self.y = data['y']
+
+
+    def cost(self):
+        cost = 0
+
+        for i in range(len(self.x)):
+            h = self.t0 + self.t1 * self.x[i]
+            cost = cost + math.pow((h - self.y[i]), 2)
+
+        return cost / (2 * len(self.x))
 
 
     def error_0(self):
@@ -67,29 +81,37 @@ class linear_regression(object):
 
         return error / len(self.x)
 
-    def update(self, epoca):
+    def update(self):
+
+        cost = self.cost()
 
         error_0 = self.error_0()
-        # print(f'Error 0: {error_0}')
-
         error_1 = self.error_1()
-        # print(f'Error 1: {error_1}')
 
 
         self.t0 = self.t0 - self.learning_rate * error_0
         self.t1 = self.t1 - self.learning_rate * error_1
        
-        return error_0, error_1
+        return cost, error_0, error_1
 
 
-    def plot(self, epoca, error_0, error_1):
+    def plot(self, cost, error_0, error_1):
+
+        plt.plot(range(self.maxepocas), cost, label='cost', color='red')
+
+        plt.title(f'Custo em relação ao número de iterações')
+        plt.ylabel("Custo")
+        plt.xlabel("Número de iterações")
+        plt.show()
 
         hx = self.t0 + self.t1 * self.x
 
-        plt.plot(self.x, hx, label='hx')
-        plt.plot(self.x, self.y, 'o', label='y')
+        plt.plot(self.x, hx, label='ajuste')
+        plt.plot(self.x, self.y, 'o', label='lucro')
 
 
-        plt.title(f'Epoch: {epoca}\nError 0: {error_0}\nError 1: {error_1}')
+        plt.title(f'Ajuste Linear \n Número de epocas: {self.maxepocas}  Custo final: {cost[len(cost) - 1]}')
         plt.legend()
+        plt.ylabel("Lucro em $10.000s")
+        plt.xlabel("População em 10.000s")
         plt.show()
