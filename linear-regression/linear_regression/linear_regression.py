@@ -32,21 +32,18 @@ class linear_regression(object):
         error_1 = 0
 
         for epoca in range(self.maxepocas):
-            cost, error_0, error_1 = self.update()
+            cost = self.update()
             cost_arr.append(cost)
-            # print(f't0: {self.t0} \t t1: {self.t1}')
-            # self.plot(epoca, error_0, error_1)
-        self.plot(cost_arr, error_0, error_1)
+
+        self.plot(cost_arr)
 
     def init(self):
         self.t0 = np.random.rand()
         self.t1 = np.random.rand()
-        # print(f't0: {self.t0} \t t1: {self.t1}')
 
 
     def read_data(self):
         data = pd.read_csv('./linear-regression/data/data1.txt', names=['x', 'y'])
-        # print(data)
         self.x = data['x']
         self.y = data['y']
 
@@ -92,10 +89,10 @@ class linear_regression(object):
         self.t0 = self.t0 - self.learning_rate * error_0
         self.t1 = self.t1 - self.learning_rate * error_1
        
-        return cost, error_0, error_1
+        return cost
 
 
-    def plot(self, cost, error_0, error_1):
+    def plot(self, cost):
 
         plt.plot(range(self.maxepocas), cost, label='cost', color='red')
 
