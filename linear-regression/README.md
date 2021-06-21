@@ -39,30 +39,40 @@ python3 linear-regression-one-variable -m 100
 ### Funcionamento:
 O comando `python3 linear-regression-multi-variables -h` mostra como usar o pacote, como visto na seguinte saída:
 ```bash
-Perceptron usage:
+linear-regression-multi-variables usage:
 
 python3 linear-regression-multi-variables -m <maxepocas> -l <learning-rate>
 ```
 
-## Exemplo
+### Exemplo
 
 Para aproximar a saída com `<maxepocas> ` = 100 e `<learning-rate>` = 0.01, use o comando:
 ```bash
 python3 linear-regression-multi-variables -m 100 -l 0.01
 ```
 
-## Gráficos
-Os gráfico plotados durante a execução e de acordo com o pedido na atividade são:
-![Gráfico 1](./images/Graph1.png)
-![Gráfico 2](./images/Graph2.png)
-![Gráfico 3](./images/Graph3.png)
-![Gráfico 4](./images/Graph4.png)
-![Gráfico 5](./images/Graph5.png)
+### Principais resultados
+![Data](./linear-regression-multi-variables/images/Graph1.png)
+![Data](./linear-regression-multi-variables/images/Graph2.png)
+![Cost x number of iteractions with alpha=0.01](./linear-regression-multi-variables/images/Graph3.png)
+![Cost x number of iteractions with alpha=0.05](./linear-regression-multi-variables/images/Graph4.png)
+![Cost x number of iteractions with alpha=0.1](./linear-regression-multi-variables/images/Graph5.png)
 
 ### 2.3
 Veja que agora não é possível traçar o ajuste linear como no exercício anterior. Por quê?
-
-## 3. Equação Normal
-
+Não é possível traçar o ajudses linear pois a combinação linear das duas variáveis não é suficiente para representar o comportamento dos dados. Seria necessário fazer a adição de características polinomiais, por exemplo interações entre as variáveis, para fazer a represnetação correta.
 
 
+
+## Equação Normal
+### Funcionamento:
+Basta digitar o comando
+```bash
+python normal-equation
+```
+
+### Resultado
+Equação nominal: 140.86 + 16978.19x
+
+## Conclusão
+Pode-se observar que implementar a equação nominal é mais simples que implmentar o gradiente decrescente, além de se ter um resultado exato.
