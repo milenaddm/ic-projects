@@ -29,7 +29,22 @@ python3 linear-regression-one-variable -m <maxepocas>
 ![Lucro por população x Lucro em $10.000s](./linear-regression-one-variable/images/Graph3.png)
 
 ## Com múltiplas variáveis
+### Funcionamento:
+O comando `python3 linear-regression-multi-variables -h` mostra como usar o pacote, como visto na seguinte saída:
+```bash
+linear-regression-multi-variables usage:
+
+python3 linear-regression-multi-variables -m <maxepocas> -l <learning-rate>
+```
+
+### Principais resultados
+![Data](./linear-regression-multi-variables/images/Graph1.png)
+![Data](./linear-regression-multi-variables/images/Graph2.png)
+![Cost x number of iteractions with alpha=0.01](./linear-regression-multi-variables/images/Graph3.png)
+![Cost x number of iteractions with alpha=0.05](./linear-regression-multi-variables/images/Graph4.png)
+![Cost x number of iteractions with alpha=0.1](./linear-regression-multi-variables/images/Graph5.png)
 ### 2.3
+Provavelmente pelo resultado ter mais de três dimensões, não sendo possível representar graficamente.
 
 ## Equação Normal
 
