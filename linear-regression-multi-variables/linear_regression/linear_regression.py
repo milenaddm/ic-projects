@@ -46,14 +46,11 @@ class linear_regression(object):
         for epoca in range(self.maxepocas):
             cost = self.update()
             cost_arr.append(cost)
-            # print(f't0: {self.t0} \t t1: {self.t1}')
-            # self.plot(epoca, error_0, error_1)
         self.plot(cost_arr)
 
     def init(self):
         self.t0 = np.random.rand()
         self.t1 = np.random.rand()
-        # print(f't0: {self.t0} \t t1: {self.t1}')
 
 
     def read_data(self):
