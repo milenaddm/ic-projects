@@ -5,7 +5,7 @@ from linear_regression.linear_regression import linear_regression
 
 
 def print_usage():
-    print("linear-regression usage:\n\npython linear-regression -m <maxepocas>")
+    print("linear-regression-one-variable usage:\n\npython linear-regression -m <maxepocas>")
 
 
 def parse_opts(opts):
