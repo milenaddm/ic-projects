@@ -18,7 +18,7 @@ pip3 install -r "./requirements.txt"
 ### Funcionamento:
 O comando `python3 linear-regression-one-variable -h` mostra como usar o pacote, como visto na seguinte saída:
 ```bash
-Perceptron usage:
+linear-regression-one-variable usage:
 
 python3 linear-regression-one-variable -m <maxepocas>
 ```
