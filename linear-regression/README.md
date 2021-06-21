@@ -47,4 +47,14 @@ python3 linear-regression-multi-variables -m <maxepocas> -l <learning-rate>
 Provavelmente pelo resultado ter mais de três dimensões, não sendo possível representar graficamente.
 
 ## Equação Normal
+### Funcionamento:
+Basta digitar o comando
+```bash
+python normal-equation
+```
 
+# Resultado
+Equação nominal: 140.86 + 16978.19x
+
+## Conclusão
+Pode-se observar que implementar a equação nominal é mais simples que implmentar o gradiente decrescente, além de se ter um resultado exato.
