@@ -1,6 +1,5 @@
 import sys
 from getopt import getopt
-import numpy as np
 
 from linear_regression.linear_regression import linear_regression
 

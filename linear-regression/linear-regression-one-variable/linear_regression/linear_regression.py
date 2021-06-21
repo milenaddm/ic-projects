@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import csv
 import math
 import matplotlib.pyplot as plt
 
@@ -28,8 +27,6 @@ class linear_regression(object):
         plt.show()
 
         cost_arr = []
-        error_0 = 0
-        error_1 = 0
 
         for epoca in range(self.maxepocas):
             cost = self.update()
@@ -41,12 +38,11 @@ class linear_regression(object):
         self.t0 = np.random.rand()
         self.t1 = np.random.rand()
 
-
     def read_data(self):
-        data = pd.read_csv('./linear-regression/data/data1.txt', names=['x', 'y'])
+        data = pd.read_csv(
+            './linear-regression/data/data1.txt', names=['x', 'y'])
         self.x = data['x']
         self.y = data['y']
-
 
     def cost(self):
         cost = 0
@@ -57,7 +53,6 @@ class linear_regression(object):
 
         return cost / (2 * len(self.x))
 
-
     def error_0(self):
         error = 0
 
@@ -66,7 +61,6 @@ class linear_regression(object):
             error = error + (h - self.y[i])
 
         return error / len(self.x)
-
 
     def error_1(self):
         error = 0
@@ -79,21 +73,17 @@ class linear_regression(object):
         return error / len(self.x)
 
     def update(self):
-
         cost = self.cost()
 
         error_0 = self.error_0()
         error_1 = self.error_1()
 
-
         self.t0 = self.t0 - self.learning_rate * error_0
         self.t1 = self.t1 - self.learning_rate * error_1
-       
+
         return cost
 
-
     def plot(self, cost):
-
         plt.plot(range(self.maxepocas), cost, label='cost', color='red')
 
         plt.title(f'Custo em relação ao número de iterações')
@@ -106,8 +96,8 @@ class linear_regression(object):
         plt.plot(self.x, hx, label='ajuste')
         plt.plot(self.x, self.y, 'o', label='lucro')
 
-
-        plt.title(f'Ajuste Linear \n Número de epocas: {self.maxepocas}  Custo final: {cost[len(cost) - 1]}')
+        plt.title(
+            f'Ajuste Linear \n Número de epocas: {self.maxepocas}  Custo final: {cost[len(cost) - 1]}')
         plt.legend()
         plt.ylabel("Lucro em $10.000s")
         plt.xlabel("População em 10.000s")
